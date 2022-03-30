@@ -1,7 +1,7 @@
 /**
  * Todo / improvement
  * - FIX: SVG renders buggy when values are < 0
- * - The SVG doesn't fit exactly, it has margn at the bottom
+ * - The SVG doesn't fit exactly, it has margin at the bottom
  */
 
 import * as d3 from "d3"; 
@@ -21,8 +21,6 @@ class BarChart {
     static bar(value, viewBox) {
         const svg = d3
             .create('svg')
-            .attr('xmlns','http://www.w3.org/2000/svg')
-            .attr('xmlns:xlink','http://www.w3.org/1999/xlink')
             .attr('viewBox', viewBox)
             .attr('preserveAspectRatio', 'none')
             .attr('class', 'barChart barChart-single');
