@@ -1,0 +1,33 @@
+.guide, .axis {
+    stroke-width: 1px;
+    vector-effect: non-scaling-stroke;
+    stroke: silver;
+}
+
+.guide {
+    stroke-dasharray: 2 2;
+}
+
+
+/* Bar Chart */
+.barChart {
+    width: 100%;
+    min-width: 5rem;
+    max-width: 15rem;
+    height: 100%;
+}
+
+.barChart-single {
+    min-height: 1rem;
+    max-height: 1.5rem;
+}
+
+.barChart .bar {
+    stroke: green;
+    stroke-width: 0.5rem;
+    vector-effect: non-scaling-stroke;
+}
+
+.barChart .negative {
+    stroke: red;
+}
