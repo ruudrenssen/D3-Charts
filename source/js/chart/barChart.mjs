@@ -1,6 +1,6 @@
 /**
  * Todo / improvement
- * - FIX: SVG renders buggy when values are < 0
+ * - FIX: SVG renders buggy when values are < 0 (do viebow correction before returning the node: all values *10 while not all values are >1); apparently brwopsers can't deal with 0.0001
  * - The SVG doesn't fit exactly, it has margin at the bottom
  */
 
