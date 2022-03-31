@@ -2601,8 +2601,8 @@ selection.prototype.transition = selection_transition;
 
 /**
  * Todo / improvement
- * - FIX: SVG renders buggy when values are < 0
- * - The SVG doesn't fit exactly, it has margn at the bottom
+ * - FIX: SVG renders buggy when values are < 0 (do viebow correction before returning the node: all values *10 while not all values are >1); apparently brwopsers can't deal with 0.0001
+ * - The SVG doesn't fit exactly, it has margin at the bottom
  */
 
 class BarChart {
@@ -2619,11 +2619,10 @@ class BarChart {
 
     static bar(value, viewBox) {
         const svg = create$1('svg')
-            .attr('xmlns','http://www.w3.org/2000/svg')
-            .attr('xmlns:xlink','http://www.w3.org/1999/xlink')
+            .classed('barChart', true)
+            .classed('barChart-single', true)
             .attr('viewBox', viewBox)
-            .attr('preserveAspectRatio', 'none')
-            .attr('class', 'barChart barChart-single');
+            .attr('preserveAspectRatio', 'none');
         
         // draw axis
         svg.append('line')
@@ -2635,11 +2634,11 @@ class BarChart {
 
         // draw line that represents value
         svg.append('line')
+            .classed(value < 0 ? 'bar negative' : 'bar' ,true)
             .attr('x1', 0)
             .attr('x2', value)
             .attr('y1', 0.5)
-            .attr('y2', 0.5)
-            .attr('class', value < 0 ? 'bar negative' : 'bar');
+            .attr('y2', 0.5);
 
         return svg.node();
     }
