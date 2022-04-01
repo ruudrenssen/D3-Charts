@@ -1,53 +1,48 @@
-import BarChart from './chart/barChart.mjs';
+import BarChart from './chart/barChart';
 
 class DataTable {
-    constructor(data) {
-        this.data = data;
+  constructor(data) {
+    this.data = data;
 
-        const serie = this.data.series.map(serie => {
-            return serie.relativePL;
-        })
+    const series = this.data.series.map((serie) => serie.relativePL);
 
-        this.barChart = new BarChart(serie);
-    }
-    
-    tableEl(tableData = this.data) {
-        const tableEl = document.createElement('table');
+    this.barChart = new BarChart(series);
+  }
 
-        tableData.series.forEach((rowData, index) => {
-            tableEl.appendChild(this.rowEl(rowData, index));
-        });
+  tableEl(tableData = this.data) {
+    const tableEl = document.createElement('table');
 
-        return tableEl;
-    }
+    tableData.series.forEach((rowData, index) => {
+      tableEl.appendChild(this.rowEl(rowData, index));
+    });
 
-    rowEl(rowData, index) {
-        const rowEl = document.createElement('tr');
+    return tableEl;
+  }
 
-        for (const dataKey in rowData) {
-            const cellData = rowData[dataKey];
-            const isHeader = dataKey === 'header';
+  rowEl(rowData, index) {
+    const rowEl = document.createElement('tr');
 
-            rowEl.appendChild(this.cellEl(cellData, isHeader));
-        }
+    Object.keys(rowData).forEach((cell) => {
+      rowEl.appendChild(DataTable.cellEl(rowData[cell], cell === 'header'));
+    });
 
-        // add a bar chart at the end
-        const chartCellEl = document.createElement('td');
+    // add a bar chart at the end
+    const chartCellEl = document.createElement('td');
 
-        chartCellEl.classList.add('bleed');
-        chartCellEl.appendChild(this.barChart.bars[index]);
-        rowEl.appendChild(chartCellEl);
+    chartCellEl.classList.add('bleed');
+    chartCellEl.appendChild(this.barChart.bars[index]);
+    rowEl.appendChild(chartCellEl);
 
-        return rowEl;
-    }
+    return rowEl;
+  }
 
-    cellEl(cellData, isHeader = false) {   
-        const cellEl = document.createElement(isHeader ? 'th' : 'td');
+  static cellEl(cellData, isHeader = false) {
+    const cellEl = document.createElement(isHeader ? 'th' : 'td');
 
-        cellEl.textContent = cellData;
+    cellEl.textContent = cellData;
 
-        return cellEl;
-    }
+    return cellEl;
+  }
 }
 
 export default DataTable;

@@ -2601,152 +2601,150 @@ selection.prototype.transition = selection_transition;
 
 /**
  * Todo / improvement
- * - FIX: SVG renders buggy when values are < 0 (do viebow correction before returning the node: all values *10 while not all values are >1); apparently brwopsers can't deal with 0.0001
+ * - FIX: SVG renders buggy when values are < 0
  * - The SVG doesn't fit exactly, it has margin at the bottom
+ * - add ticks
+ * - add value axis
  */
 
 class BarChart {
-    static STEPS = 5;
+  static STEPS = 5;
 
-    constructor(data) {
-        const min = Math.min(...data);
-        const max = Math.max(...data);
-        
-        this.bars = data.map(value => {
-            return BarChart.bar(value, BarChart.viewBox(min, max));
-        });
+  constructor(data) {
+    const min = Math.min(...data);
+    const max = Math.max(...data);
+
+    this.bars = data.map((value) => BarChart.bar(value, BarChart.viewBox(min, max)));
+  }
+
+  static bar(value, viewBox) {
+    const svg = create$1('svg')
+      .classed('barChart', true)
+      .classed('barChart-single', true)
+      .attr('viewBox', viewBox)
+      .attr('preserveAspectRatio', 'none');
+
+    // draw axis
+    svg.append('line')
+      .attr('x1', 0)
+      .attr('x2', 0)
+      .attr('y1', 0)
+      .attr('y2', 1)
+      .attr('class', 'axis');
+
+    // draw line that represents value
+    svg.append('line')
+      .classed(value < 0 ? 'bar negative' : 'bar', true)
+      .attr('x1', 0)
+      .attr('x2', value)
+      .attr('y1', 0.5)
+      .attr('y2', 0.5);
+
+    return svg.node();
+  }
+
+  static viewBox(min, max, height = 1) {
+    if (min > 0) {
+      // all values positive: base viewBox on max value
+      return [0, 0, max, height];
     }
 
-    static bar(value, viewBox) {
-        const svg = create$1('svg')
-            .classed('barChart', true)
-            .classed('barChart-single', true)
-            .attr('viewBox', viewBox)
-            .attr('preserveAspectRatio', 'none');
-        
-        // draw axis
-        svg.append('line')
-            .attr('x1', 0)
-            .attr('x2', 0)
-            .attr('y1', 0)
-            .attr('y2', 1)
-            .attr('class', 'axis');
-
-        // draw line that represents value
-        svg.append('line')
-            .classed(value < 0 ? 'bar negative' : 'bar' ,true)
-            .attr('x1', 0)
-            .attr('x2', value)
-            .attr('y1', 0.5)
-            .attr('y2', 0.5);
-
-        return svg.node();
+    if (max < 0) {
+      // all values negative: base viewBox on min value
+      return [min, 0, Math.abs(min), height];
     }
 
-    static viewBox(min, max, height = 1) {
-        if(min > 0) {
-            // all values positive: base viewBox on max value
-            return [0, 0, max, height];
-        } else if (max < 0) {
-            // all values negative: base viewBox on min value
-            return [min, 0, Math.abs(min), height];
-        } else {
-            // combined values: base viewBox on min and max
-            return [min, 0, Math.abs(max - min), height];
-        }
-    }
+    // combined values: base viewBox on min and max
+    return [min, 0, Math.abs(max - min), height];
+  }
 }
 
 class DataTable {
-    constructor(data) {
-        this.data = data;
+  constructor(data) {
+    this.data = data;
 
-        const serie = this.data.series.map(serie => {
-            return serie.relativePL;
-        });
+    const series = this.data.series.map((serie) => serie.relativePL);
 
-        this.barChart = new BarChart(serie);
-    }
-    
-    tableEl(tableData = this.data) {
-        const tableEl = document.createElement('table');
+    this.barChart = new BarChart(series);
+  }
 
-        tableData.series.forEach((rowData, index) => {
-            tableEl.appendChild(this.rowEl(rowData, index));
-        });
+  tableEl(tableData = this.data) {
+    const tableEl = document.createElement('table');
 
-        return tableEl;
-    }
+    tableData.series.forEach((rowData, index) => {
+      tableEl.appendChild(this.rowEl(rowData, index));
+    });
 
-    rowEl(rowData, index) {
-        const rowEl = document.createElement('tr');
+    return tableEl;
+  }
 
-        for (const dataKey in rowData) {
-            const cellData = rowData[dataKey];
-            const isHeader = dataKey === 'header';
+  rowEl(rowData, index) {
+    const rowEl = document.createElement('tr');
 
-            rowEl.appendChild(this.cellEl(cellData, isHeader));
-        }
+    Object.keys(rowData).forEach((cell) => {
+      rowEl.appendChild(DataTable.cellEl(rowData[cell], cell === 'header'));
+    });
 
-        // add a bar chart at the end
-        const chartCellEl = document.createElement('td');
+    // add a bar chart at the end
+    const chartCellEl = document.createElement('td');
 
-        chartCellEl.classList.add('bleed');
-        chartCellEl.appendChild(this.barChart.bars[index]);
-        rowEl.appendChild(chartCellEl);
+    chartCellEl.classList.add('bleed');
+    chartCellEl.appendChild(this.barChart.bars[index]);
+    rowEl.appendChild(chartCellEl);
 
-        return rowEl;
-    }
+    return rowEl;
+  }
 
-    cellEl(cellData, isHeader = false) {   
-        const cellEl = document.createElement(isHeader ? 'th' : 'td');
+  static cellEl(cellData, isHeader = false) {
+    const cellEl = document.createElement(isHeader ? 'th' : 'td');
 
-        cellEl.textContent = cellData;
+    cellEl.textContent = cellData;
 
-        return cellEl;
-    }
+    return cellEl;
+  }
 }
 
 const data = {
-    series: [
-        {
-            header: "Equity & Mutual Funds",
-            positions: 15,
-            currency: "SAR",
-            costValue: 8000,
-            marketValue: 9999999.99,
-            pL: 7777.77,
-            relativePL: 444.404
-        },
-        {
-            header: "Fixed Income",
-            positions: 15,
-            currency: "SAR",
-            costValue: 18000,
-            marketValue: 9999999.99,
-            pL: 7777.77,
-            relativePL: -302.202
-        },
-        {
-            header: "Money markets",
-            positions: 15,
-            currency: "SAR",
-            costValue: 28000,
-            marketValue: 9999999.99,
-            pL: 7777.77,
-            relativePL: -0.022
-        },
-        {
-            header: "Total",
-            positions: 80,
-            currency: "SAR",
-            costValue: 9000,
-            marketValue: 9999999.99,
-            pL: 7777.77,
-            relativePL: 33.303
-        }
-    ]
+  series: [
+    {
+      header: 'Equity & Mutual Funds',
+      positions: 15,
+      currency: 'SAR',
+      costValue: 8000,
+      marketValue: 9999999.99,
+      pL: 7777.77,
+      relativePL: 444.404,
+    },
+    {
+      header: 'Fixed Income',
+      positions: 15,
+      currency: 'SAR',
+      costValue: 18000,
+      marketValue: 9999999.99,
+      pL: 7777.77,
+      relativePL: -302.202,
+    },
+    {
+      header: 'Money markets',
+      positions: 15,
+      currency: 'SAR',
+      costValue: 28000,
+      marketValue: 9999999.99,
+      pL: 7777.77,
+      relativePL: -0.022,
+    },
+    {
+      header: 'Total',
+      positions: 80,
+      currency: 'SAR',
+      costValue: 9000,
+      marketValue: 9999999.99,
+      pL: 7777.77,
+      relativePL: 33.303,
+    },
+  ],
 };
+
 const table = new DataTable(data);
 
 document.body.appendChild(table.tableEl());
