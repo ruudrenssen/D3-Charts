@@ -14,20 +14,20 @@ class BarChart {
     const domain = BarChart.domain(values);
     const viewBox = `${domain[0]} 0 ${Math.abs(domain[0] - domain[1])} 1`;
     
-    this.bars = values.map(value => BarChart.singelBar(value, viewBox).node());
+    this.bars = values.map(value => BarChart.singelBar(value, domain, viewBox).node());
     this.svg = d3.create('svg')
       .classed('bar-chart', true);
     
     this.bars.forEach(bar => this.svg.node().append(bar));
   }
 
-  static singelBar (value, viewBow) {
+  static singelBar (value, domain, viewBow) {
     const svg = d3.create('svg')
       .attr('viewBox', viewBow)
       .classed('single-bar', true);
     const x = d3.scaleLinear()
-      // .domain(domain)
-      // .range(BarChart.range(domain))
+      .domain(domain)
+      .range(BarChart.range(domain))
     const axis = d3.axisBottom(x).ticks(3, ',f');;
     
     svg.append('g')

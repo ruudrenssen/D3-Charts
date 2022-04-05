@@ -38,3 +38,5 @@ const barChartData = [{
   }];
 
 const table = new DataTable(barChartData);
+
+document.body.appendChild(table.table);
