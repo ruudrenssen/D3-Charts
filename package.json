@@ -7,7 +7,9 @@
     "build": "run-p build:*",
     "build:scripts": "rollup --config",
     "build:styles": "postcss ./source/css/index.css --verbose --output ./public/styles.css",
-    "dev": "concurrently 'npm:watch' 'npm:host'",
+    "build:static": "shx cp ./source/static/* ./public",
+    "clean": "shx rm -rf ./public/* ",
+    "dev": "npm run clean & concurrently 'npm:build' 'npm:watch' 'npm:host'",
     "host": "npx http-server --port 8080 -c-1",
     "watch": "run-p watch:*",
     "watch:scripts": "npm run build:scripts -- --watch",
@@ -31,6 +33,8 @@
     "postcss-csso": "^6.0.0",
     "postcss-import": "^14.1.0",
     "postcss-preset-env": "^7.4.3",
-    "rollup": "^2.70.1"
+    "rollup": "^2.70.1",
+    "shelljs": "^0.8.5",
+    "shx": "^0.3.4"
   }
 }
