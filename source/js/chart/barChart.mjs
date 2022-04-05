@@ -16,7 +16,8 @@ class BarChart {
     
     this.bars = values.map(value => BarChart.singelBar(value, domain, viewBox).node());
     this.svg = d3.create('svg')
-      .classed('bar-chart', true);
+      .classed('chart', true)
+      .classed('chart-bar', true);
     
     this.bars.forEach(bar => this.svg.node().append(bar));
   }
@@ -24,7 +25,7 @@ class BarChart {
   static singelBar (value, domain, viewBow) {
     const svg = d3.create('svg')
       .attr('viewBox', viewBow)
-      .classed('single-bar', true);
+      .classed('chart-item', true);
     const x = d3.scaleLinear()
       .domain(domain)
       .range(BarChart.range(domain))
@@ -35,7 +36,9 @@ class BarChart {
     
     svg.append('line')
       .attr('x1', 0)
-      .attr('x2', value);
+      .attr('x2', value)
+      .attr('y1', 0)
+      .attr('y2', 0);
 
     return svg;
   }

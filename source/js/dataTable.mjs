@@ -26,7 +26,7 @@ class DataTable {
     // add a bar chart at the end
     const chartCellEl = document.createElement('td');
     chartCellEl.appendChild(this.barChart.bars[index]);
-    chartCellEl.classList.add('full-bleed');
+    chartCellEl.classList.add('chart', 'full-bleed');
     el.appendChild(chartCellEl);
 
     return el;
