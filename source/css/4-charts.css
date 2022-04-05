@@ -3,10 +3,6 @@
     min-width: 5rem;
 }
 
-.barChart-single {
-    height: 1rem;
-}
-
 .barChart .bar {
     stroke: green;
     stroke-width: 0.5rem;
