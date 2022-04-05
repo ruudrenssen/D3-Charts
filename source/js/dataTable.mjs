@@ -2,14 +2,11 @@ import BarChart from './chart/barChart';
 
 class DataTable {
   constructor(data) {
-    this.data = data;
-
-    const series = this.data.series.map((serie) => serie.relativePL);
-
-    this.barChart = new BarChart(series);
+    this.barChart = new BarChart(data);
+    // this.table = DataTable.tableEl(data);
   }
 
-  tableEl(tableData = this.data) {
+  static tableEl(tableData) {
     const tableEl = document.createElement('table');
 
     tableData.series.forEach((rowData, index) => {
@@ -19,7 +16,7 @@ class DataTable {
     return tableEl;
   }
 
-  rowEl(rowData, index) {
+  static rowEl(rowData, index) {
     const rowEl = document.createElement('tr');
 
     Object.keys(rowData).forEach((cell) => {
@@ -29,8 +26,7 @@ class DataTable {
     // add a bar chart at the end
     const chartCellEl = document.createElement('td');
 
-    chartCellEl.classList.add('bleed');
-    chartCellEl.appendChild(this.barChart.bars[index]);
+    chartCellEl.classList.add('full-bleed');
     rowEl.appendChild(chartCellEl);
 
     return rowEl;
