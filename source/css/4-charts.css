@@ -6,14 +6,19 @@
 /* Bar Chart */
 .chart-bar {
     min-width: 5rem;
+    max-width: 10rem;
 }
 
-.chart-bar .chart-item {
+.chart-bar .chart-bar-item {
+    height: 2rem;
+}
+
+.chart-bar-item .chart-line {
     stroke: green;
     stroke-width: 0.5rem;
     vector-effect: non-scaling-stroke;
 }
 
-.chart-bar .negative {
+.negative .chart-line{
     stroke: red;
 }

@@ -25,7 +25,9 @@ class BarChart {
   static singelBar (value, domain, viewBow) {
     const svg = d3.create('svg')
       .attr('viewBox', viewBow)
-      .classed('chart-item', true);
+      .classed('chart', true)
+      .classed('chart-bar-item', true)
+      .classed('negative', value < 0);
     const x = d3.scaleLinear()
       .domain(domain)
       .range(BarChart.range(domain))
@@ -38,7 +40,8 @@ class BarChart {
       .attr('x1', 0)
       .attr('x2', value)
       .attr('y1', 0)
-      .attr('y2', 0);
+      .attr('y2', 0)
+      .classed('chart-line', true);
 
     return svg;
   }
