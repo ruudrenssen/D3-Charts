@@ -7,7 +7,7 @@ const barChartData = [{
     costValue: 8000,
     marketValue: 9999999.99,
     pL: -7777.77,
-    relativePL: -444.404,
+    relativePL: -0.44,
   },
   {
     header: 'Fixed Income',
@@ -16,7 +16,7 @@ const barChartData = [{
     costValue: 18000,
     marketValue: 9999999.99,
     pL: 7777.77,
-    relativePL: 302.202,
+    relativePL: 0.202,
   },
   {
     header: 'Money markets',
@@ -34,7 +34,7 @@ const barChartData = [{
     costValue: 9000,
     marketValue: 9999999.99,
     pL: 777.77,
-    relativePL: 33.303,
+    relativePL: 0.303,
   }];
 
 const table = new DataTable(barChartData);

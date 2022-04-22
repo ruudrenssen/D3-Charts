@@ -22,3 +22,12 @@
 .negative .chart-line{
     stroke: red;
 }
+
+.tick * {
+    stroke-width: 1px;
+    vector-effect: non-scaling-stroke;
+}
+
+.domain {
+    stroke: none;
+}
