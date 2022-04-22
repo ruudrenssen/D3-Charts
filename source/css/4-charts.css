@@ -24,6 +24,8 @@
 }
 
 .tick * {
+    stroke: gray;
+    stroke-dasharray: 2 2;
     stroke-width: 1px;
     vector-effect: non-scaling-stroke;
 }

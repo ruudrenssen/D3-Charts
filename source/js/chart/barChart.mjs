@@ -9,7 +9,7 @@ class BarChart {
   constructor(data) {
     const values = data.map((records) => records.relativePL);
     const domain = BarChart.domain(values);
-    const viewBox = `${domain[0]} 0 ${Math.abs(domain[0] - domain[1])} 1`;
+    const viewBox = `${domain[0]} -1 ${Math.abs(domain[0] - domain[1])} 2`;
     
     this.bars = values.map(value => BarChart.singelBar(value, domain, viewBox).node());
     this.svg = d3.create('svg')
@@ -27,11 +27,16 @@ class BarChart {
       .classed('negative', value < 0);
     const x = d3.scaleLinear()
       .domain(domain)
-      .range(BarChart.range(domain))
-    const axis = d3.axisBottom(x).ticks(3, ',f');;
+      .range(domain)
+    const axis = d3.axisBottom(x)
+      .ticks(3, ',f')
     
     svg.append('g')
       .call(axis);
+
+    svg.selectAll('.tick line')
+      .attr('y1', -1)
+      .attr('y2', 1);
     
     svg.append('line')
       .attr('x1', 0)
@@ -55,10 +60,6 @@ class BarChart {
 
     // both negative and postive: use extremes
     return [min, max];
-  }
-
-  static range(domain) {
-    return domain;
   }
 }
 
