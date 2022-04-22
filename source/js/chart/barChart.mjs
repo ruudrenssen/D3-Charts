@@ -29,7 +29,7 @@ class BarChart {
       .domain(domain)
       .range(domain)
     const axis = d3.axisBottom(x)
-      .ticks(3)
+      .ticks()
     
     svg.append('g')
       .call(axis);
@@ -41,7 +41,7 @@ class BarChart {
     svg.selectAll('.tick text')
       .remove();
 
-      svg.selectAll('.domain')
+    svg.selectAll('.domain')
       .remove();
     
     svg.append('line')
