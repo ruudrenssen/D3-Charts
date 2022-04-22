@@ -21,15 +21,15 @@ class BarChart {
 
   static singelBar (value, domain, viewBow) {
     const svg = d3.create('svg')
+      .attr('preserveAspectRatio', 'none')
       .attr('viewBox', viewBow)
-      .classed('chart', true)
       .classed('chart-bar-item', true)
       .classed('negative', value < 0);
     const x = d3.scaleLinear()
       .domain(domain)
       .range(domain)
     const axis = d3.axisBottom(x)
-      .ticks(3, ',f')
+      .ticks(3)
     
     svg.append('g')
       .call(axis);
@@ -37,6 +37,12 @@ class BarChart {
     svg.selectAll('.tick line')
       .attr('y1', -1)
       .attr('y2', 1);
+
+    svg.selectAll('.tick text')
+      .remove();
+
+      svg.selectAll('.domain')
+      .remove();
     
     svg.append('line')
       .attr('x1', 0)
