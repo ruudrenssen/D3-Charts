@@ -2,7 +2,6 @@
  * Todo / improvement
  * - FIX: SVG renders buggy when values are < 0
  * - The SVG doesn't fit exactly, it has margin at the bottom
- * - add ticks
  * - add value axis
  */
 
