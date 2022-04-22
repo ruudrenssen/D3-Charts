@@ -1,8 +1,3 @@
-/**
- * Todo / improvement
- * - add value axis
- */
-
 import * as d3 from 'd3';
 
 class BarChart {
@@ -59,13 +54,13 @@ class BarChart {
     const max = d3.max(values);
 
     // all values positive: base range on zero and max value
-    if (min > 0) return [ 0, max];
+    if (min > 0) return [ 0, max ];
 
     // all values negative: base viewBox on min value and zero
-    if (max < 0) return [ min, 0];
+    if (max < 0) return [ min, 0 ];
 
     // both negative and postive: use extremes
-    return [min, max];
+    return [ min, max ];
   }
 }
 
