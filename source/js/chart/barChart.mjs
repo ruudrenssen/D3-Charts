@@ -1,63 +1,66 @@
-/**
- * Todo / improvement
- * - FIX: SVG renders buggy when values are < 0
- * - The SVG doesn't fit exactly, it has margin at the bottom
- * - add ticks
- * - add value axis
- */
-
 import * as d3 from 'd3';
 
 class BarChart {
-  static STEPS = 5;
-
   constructor(data) {
-    const min = Math.min(...data);
-    const max = Math.max(...data);
-
-    this.bars = data.map((value) => BarChart.bar(value, BarChart.viewBox(min, max)));
+    const values = data.map((records) => records.relativePL);
+    const domain = BarChart.domain(values);
+    const viewBox = `${domain[0]} -1 ${Math.abs(domain[0] - domain[1])} 2`;
+    
+    this.bars = values.map(value => BarChart.singelBar(value, domain, viewBox).node());
+    this.svg = d3.create('svg')
+      .classed('chart', true)
+      .classed('chart-bar', true);
+    
+    this.bars.forEach(bar => this.svg.node().append(bar));
   }
 
-  static bar(value, viewBox) {
-    const svg = d3
-      .create('svg')
-      .classed('barChart', true)
-      .classed('barChart-single', true)
-      .attr('viewBox', viewBox)
-      .attr('preserveAspectRatio', 'none');
+  static singelBar (value, domain, viewBow) {
+    const svg = d3.create('svg')
+      .attr('preserveAspectRatio', 'none')
+      .attr('viewBox', viewBow)
+      .classed('chart-bar-item', true)
+      .classed('negative', value < 0);
+    const x = d3.scaleLinear()
+      .domain(domain)
+      .range(domain)
+    const axis = d3.axisBottom(x)
+      .ticks()
+    
+    svg.append('g')
+      .call(axis);
 
-    // draw axis
-    svg.append('line')
-      .attr('x1', 0)
-      .attr('x2', 0)
-      .attr('y1', 0)
-      .attr('y2', 1)
-      .attr('class', 'axis');
+    svg.selectAll('.tick line')
+      .attr('y1', -1)
+      .attr('y2', 1);
 
-    // draw line that represents value
+    svg.selectAll('.tick text')
+      .remove();
+
+    svg.selectAll('.domain')
+      .remove();
+    
     svg.append('line')
-      .classed(value < 0 ? 'bar negative' : 'bar', true)
       .attr('x1', 0)
       .attr('x2', value)
-      .attr('y1', 0.5)
-      .attr('y2', 0.5);
+      .attr('y1', 0)
+      .attr('y2', 0)
+      .classed('chart-line', true);
 
-    return svg.node();
+    return svg;
   }
 
-  static viewBox(min, max, height = 1) {
-    if (min > 0) {
-      // all values positive: base viewBox on max value
-      return [0, 0, max, height];
-    }
+  static domain(values) {
+    const min = d3.min(values);
+    const max = d3.max(values);
 
-    if (max < 0) {
-      // all values negative: base viewBox on min value
-      return [min, 0, Math.abs(min), height];
-    }
+    // all values positive: base range on zero and max value
+    if (min > 0) return [ 0, max ];
 
-    // combined values: base viewBox on min and max
-    return [min, 0, Math.abs(max - min), height];
+    // all values negative: base viewBox on min value and zero
+    if (max < 0) return [ min, 0 ];
+
+    // both negative and postive: use extremes
+    return [ min, max ];
   }
 }
 

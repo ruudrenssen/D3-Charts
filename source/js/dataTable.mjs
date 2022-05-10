@@ -2,46 +2,42 @@ import BarChart from './chart/barChart';
 
 class DataTable {
   constructor(data) {
-    this.data = data;
-
-    const series = this.data.series.map((serie) => serie.relativePL);
-
-    this.barChart = new BarChart(series);
+    this.barChart = new BarChart(data);
+    this.table = this.tableEl(data);
   }
 
-  tableEl(tableData = this.data) {
-    const tableEl = document.createElement('table');
+  tableEl(tableData) {
+    const el = document.createElement('table');
 
-    tableData.series.forEach((rowData, index) => {
-      tableEl.appendChild(this.rowEl(rowData, index));
+    tableData.forEach((rowData, index) => {
+      el.appendChild(this.rowEl(rowData, index));
     });
 
-    return tableEl;
+    return el;
   }
 
   rowEl(rowData, index) {
-    const rowEl = document.createElement('tr');
+    const el = document.createElement('tr');
 
     Object.keys(rowData).forEach((cell) => {
-      rowEl.appendChild(DataTable.cellEl(rowData[cell], cell === 'header'));
+      el.appendChild(DataTable.cellEl(rowData[cell], cell === 'header'));
     });
 
     // add a bar chart at the end
     const chartCellEl = document.createElement('td');
-
-    chartCellEl.classList.add('bleed');
     chartCellEl.appendChild(this.barChart.bars[index]);
-    rowEl.appendChild(chartCellEl);
+    chartCellEl.classList.add('full-bleed');
+    el.appendChild(chartCellEl);
 
-    return rowEl;
+    return el;
   }
 
   static cellEl(cellData, isHeader = false) {
-    const cellEl = document.createElement(isHeader ? 'th' : 'td');
+    const el = document.createElement(isHeader ? 'th' : 'td');
 
-    cellEl.textContent = cellData;
+    el.textContent = cellData;
 
-    return cellEl;
+    return el;
   }
 }
 
